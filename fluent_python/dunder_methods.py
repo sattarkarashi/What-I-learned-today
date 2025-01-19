@@ -29,3 +29,37 @@ def spades_high(card):
 
 deck = FrenchDeck()
 print(sorted(deck, key=spades_high))
+
+# Mathemtical operations and dunder methods
+
+from math import hypot
+class Vector:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f'Vector({self.x!r}, {self.y!r})'
+
+    def __abs__(self):  
+        return hypot(self.x, self.y)
+    
+    def __bool__(self):
+        return bool(abs(self))
+    
+    def __add__(self, other):
+        x = self.x + other.x
+        y = self.y + other.y
+        return Vector(x, y)
+    
+    def __mul__(self, scalar):
+        return Vector(self.x * scalar, self.y * scalar)
+
+# By default, instance of user defined classes are considered True unless either __bool__ or __len__ is implemented.
+# bool() calls x.__bool__() and uses the result. If __bool__ is not implemented, Python tries to invoke x.__len__(),
+#  and if that returns zero, bool returns False. Otherwise, bool returns True.
+
+v1 = Vector(2, 4)
+v2 = Vector(2, 1)
+print(v1, v2)
+print(v1 + v2)
