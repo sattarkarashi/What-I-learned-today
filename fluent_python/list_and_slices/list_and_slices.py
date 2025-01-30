@@ -46,3 +46,23 @@ except Exception as e:
 
 print(t)
 print(id(t))
+
+
+
+# Inserting values to lists from left is expensive because all the elements have to be shifted to the right, 
+# for such scenarios deque is a better option. It is a double ended queue and is optimized for inserting 
+# and deleting elements from both ends.
+
+from collections import deque
+
+dq = deque(range(12), maxlen=10)
+print(dq)
+
+dq.rotate(3)
+print(dq)
+
+dq.appendleft(-1)
+print(dq)
+
+dq.extendleft([11, 22, 33])
+print(dq)
