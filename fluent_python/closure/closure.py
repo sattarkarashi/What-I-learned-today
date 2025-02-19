@@ -52,3 +52,36 @@ avg = make_average_nonlocal()
 
 print(avg(6))
 print(avg(8))
+
+import time
+import functools
+
+def clock(func):
+    functools.wraps(func)
+    def clocked(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start_time
+        func_name = func.__name__
+        args_repr = [repr(arg) for arg in args]
+        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
+        signature = ", ".join(args_repr + kwargs_repr)
+        print(f'{func_name}({signature}) took {elapsed:.8f}s')
+        return result
+    return clocked
+
+@clock
+def test_function(seconds):
+    time.sleep(seconds)
+    return 'done'
+
+test_function(1.5)
+
+@functools.lru_cache()
+@clock
+def fibo(n):
+    if n < 2:
+        return n
+    return fibo(n-1) + fibo(n-2)
+
+fibo(8)
