@@ -1,4 +1,8 @@
 from collections import namedtuple
+import time
+from functools import singledispatch
+from decimal import Decimal
+from datetime import datetime
 # Decorators
 
 def deco_sample(func):
@@ -105,3 +109,32 @@ print(f"Sato fidelity promo (function): {order_sato_func}")
 
 order_sati_bulk_func = Order(sati, sati_cart, bulk_item_promo)
 print(f"Sati bulk promo (function): {order_sati_bulk_func}")
+
+
+@singledispatch
+def formatted_output(arg):
+    return f"Default format: {arg}"
+
+@formatted_output.register
+def _(arg: int):
+    return f"Integer: {arg:+d}"
+
+@formatted_output.register
+def _(arg: float):
+    return f"Float: {arg:.2f}"
+
+@formatted_output.register
+def _(arg: Decimal):
+    return f"Decimal: {arg:.2f}"
+
+@formatted_output.register
+def _(arg: datetime):
+    return f"Date/Time: {arg:%Y-%m-%d %H:%M:%S}"
+
+# Test the single dispatch
+print(formatted_output('Hello'))  # Default format
+print(formatted_output(42))       # Integer format
+print(formatted_output(3.14159))  # Float format
+print(formatted_output(Decimal('3.14159')))  # Decimal format
+print(formatted_output(datetime.now()))  # DateTime format
+
