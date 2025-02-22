@@ -138,3 +138,40 @@ print(formatted_output(3.14159))  # Float format
 print(formatted_output(Decimal('3.14159')))  # Decimal format
 print(formatted_output(datetime.now()))  # DateTime format
 
+
+
+registery = set()
+
+def register(active=True):
+    def decorate(func):
+        print("Running register (active = %s)-decorate(%s)"%(active, func))
+
+        if active:
+            registery.add(func)
+        else:
+            registery.discard(func)
+        
+        return func
+    
+    return decorate
+
+
+@register(active=False)
+def f1():
+    print("Running f1")
+
+@register()
+def f2():
+    print("Running f2")
+
+def f3():
+    print("Running f3")
+
+print(registery)
+
+register()(f3)
+print(registery)
+
+
+
+
