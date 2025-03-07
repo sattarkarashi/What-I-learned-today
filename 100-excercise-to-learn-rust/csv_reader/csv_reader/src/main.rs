@@ -40,11 +40,31 @@ fn load_ohlc_data(file_path: &str) -> Result<Vec<Ohlc>> {
     Ok(data)
 }
 
+fn calculate_sma(data: &[Ohlc], period: usize) -> Vec<f64> {
+    let mut sma = Vec::with_capacity(data.len());
+    
+    // Initial values before we have enough data
+    for _ in 0..period - 1 {
+        sma.push(0.0);
+    }
+
+    // Calculate SMA for each window
+    for i in period - 1..data.len() {
+        let window = &data[i - (period - 1)..=i];
+        let avg = window.iter().map(|x| x.close).sum::<f64>() / period as f64;
+        sma.push(avg);
+    }
+
+    sma
+}
+
 fn main() -> Result<()> {
     let data = load_ohlc_data("data.csv")?;
+    let sma = calculate_sma(&data, 3); // 3-period SMA
+    
     println!("Loaded {} records", data.len());
-    for record in data.iter().take(5) {
-        println!("{:?}", record);
+    for (record, sma_val) in data.iter().zip(sma.iter()) {
+        println!("Date: {}, Close: {}, SMA: {}", record.datetime, record.close, sma_val);
     }
     Ok(())
 }
