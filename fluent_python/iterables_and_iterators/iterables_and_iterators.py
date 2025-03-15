@@ -58,3 +58,17 @@ class Sentence:
 third_iterable = Sentence('This is a sentence')
 for word in third_iterable:
     print(word)
+
+# Lazy implementaton of Sentence using re.iterall and generator expression
+import re
+class Sentence:
+    def __init__(self, text):
+        self.text = text
+    def __iter__(self):
+        return (match.group() for match in re.finditer(r'\w+', self.text))
+    def __repr__(self):
+        return 'Sentence(%s)' % reprlib.repr(self.text)
+
+fourth_iterable = Sentence('This is a sentence')
+for word in fourth_iterable:
+    print(word)
