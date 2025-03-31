@@ -34,4 +34,25 @@ fn main() {
 
     assert_eq!(x, 5);
     assert_eq!(*y, 5);
+
+    struct CustomPointer {
+        data: String
+    }
+
+    impl Drop for CustomPointer{
+        fn drop(&mut self) {
+            println!("Dropping MyBox with data: {}", self.data);
+        }
+    }
+
+    use std::mem::drop;
+
+    let c = CustomPointer{data: String::from("Hello")};
+    drop(c);
+
+    let d = CustomPointer{data: String::from("World")};
+
+    println!("CustomPointer created");
+
+
 }
